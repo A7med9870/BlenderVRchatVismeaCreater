@@ -13,10 +13,10 @@ class SimsVismeaSoundsPanelcms(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'SimsVRC'
     bl_order = 1
-    #@classmethod
-    #def poll(cls, context):
-    #    preferences = bpy.context.preferences.addons['VRCVismeaBones'].preferences
-    #    return preferences.Boners_enum1 == "OPTION1"
+    @classmethod
+    def poll(cls, context):
+        preferences = bpy.context.preferences.addons['BlenderVRchatVismeaCreater'].preferences
+        return preferences.Boners_enum1 == "OPTION1"
     def draw(self, context):
         layout = self.layout
         scene = context.scene

@@ -31,7 +31,7 @@ class ShapeKeysPanel(bpy.types.Panel):
 
     @classmethod
     def poll(cls, context):
-        preferences = context.preferences.addons['VRCVismeaBones'].preferences
+        preferences = context.preferences.addons['BlenderVRchatVismeaCreater'].preferences
         return preferences.show_shapekeylist_panel
 
     def draw(self, context):
