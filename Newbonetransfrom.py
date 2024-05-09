@@ -54,15 +54,15 @@ class SimsVismeaSoundsPanelnew(bpy.types.Panel):
         else:
             row = layout.row()
             row.label(text="Jaw Rotation:")
-            row.prop(sims_vismea_props, "jaw_rotation", slider=True)
+            row.prop(sims_vismea_props, "jaw_rotation_AA", slider=True)
 
             row = layout.row()
             row.label(text="Lmouth X Location:")
-            row.prop(sims_vismea_props, "lmouth_location_x", slider=True)
+            row.prop(sims_vismea_props, "lmouth_location_x_AA", slider=True)
 
             row = layout.row()
             row.label(text="Rmouth X Location:")
-            row.prop(sims_vismea_props, "rmouth_location_x", slider=True)
+            row.prop(sims_vismea_props, "rmouth_location_x_AA", slider=True)
 
             if is_pose_mode(context):
                 layout.label(text="Pose mode")
@@ -73,7 +73,7 @@ class SimsVismeaSoundsPanelnew(bpy.types.Panel):
 
             row = layout.row()
             row.operator("pose.clear_operator", icon='OUTLINER_OB_ARMATURE')
-
+#create new panels for the sliders, then split them for each button??
 def is_pose_mode(context):
     return context.mode == 'POSE'
 
@@ -151,9 +151,9 @@ class BoneTransformAAOperatorold(bpy.types.Operator):
             self.report({'ERROR'}, "Selected bones not found")
             return {'CANCELLED'}
 
-        rotate_bone(selected_jaw_bonee, (1, 0, 0), sims_vismea_props.jaw_rotation)
-        move_bone(selected_lmouth_bonee, 'x', sims_vismea_props.lmouth_location_x)
-        move_bone(selected_rmouth_bonee, 'x', sims_vismea_props.rmouth_location_x)
+        rotate_bone(selected_jaw_bonee, (1, 0, 0), sims_vismea_props.jaw_rotation_AA)
+        move_bone(selected_lmouth_bonee, 'x', sims_vismea_props.lmouth_location_x_AA)
+        move_bone(selected_rmouth_bonee, 'x', sims_vismea_props.rmouth_location_x_AA)
 
         return {'FINISHED'}
 
@@ -174,19 +174,19 @@ class SimsVismeaPropertyGroup(bpy.types.PropertyGroup):
         description="Name of the selected right mouth bone",
         default="R_Mouth"
     )
-    jaw_rotation: bpy.props.FloatProperty(
+    jaw_rotation_AA: bpy.props.FloatProperty(
         name="Jaw Rotation",
         description="Rotation of the jaw bone",
         default=0.09,
         min=0.0,
         max=1.0
     )
-    lmouth_location_x: bpy.props.FloatProperty(
+    lmouth_location_x_AA: bpy.props.FloatProperty(
         name="Left Mouth X Location",
         description="X location of the left mouth bone",
         default=-0.01
     )
-    rmouth_location_x: bpy.props.FloatProperty(
+    rmouth_location_x_AA: bpy.props.FloatProperty(
         name="Right Mouth X Location",
         description="X location of the right mouth bone",
         default=0.01
