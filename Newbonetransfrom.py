@@ -13,10 +13,10 @@ class SimsVismeaSoundsPanelnew(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'SimsVRC'
     bl_order = 1
-    @classmethod
-    def poll(cls, context):
-        preferences = bpy.context.preferences.addons['BlenderVRchatVismeaCreater'].preferences
-        return preferences.Boners_enum1 == "OPTION1"
+    #@classmethod
+    #def poll(cls, context):
+    #    preferences = bpy.context.preferences.addons['BlenderVRchatVismeaCreater'].preferences
+    #    return preferences.Boners_enum1 == "OPTION1"
     def draw(self, context):
         layout = self.layout
         scene = context.scene
@@ -191,6 +191,23 @@ class SimsVismeaPropertyGroup(bpy.types.PropertyGroup):
         description="X location of the right mouth bone",
         default=0.01
     )
+    jaw_rotation_CH: bpy.props.FloatProperty(
+        name="Jaw Rotation",
+        description="Rotation of the jaw bone",
+        default=0.3,
+        min=0.0,
+        max=1.0
+    )
+    lmouth_location_x_CH: bpy.props.FloatProperty(
+        name="Left Mouth X Location",
+        description="X location of the left mouth bone",
+        default=-0.015
+    )
+    rmouth_location_x_CH: bpy.props.FloatProperty(
+        name="Right Mouth X Location",
+        description="X location of the right mouth bone",
+        default=0.015
+    )
 
 class BoneTransformohOperatorold(bpy.types.Operator):
     """Moves the characher mouth to momick the sound of OH"""
@@ -236,33 +253,25 @@ class BoneTransformCHOperatorold(bpy.types.Operator):
     def poll(cls, context):
         return is_pose_mode(context)
     def execute(self, context):
-        # Get the armature object
+        sims_vismea_props = context.scene.sims_vismea_props
         armature = bpy.data.objects.get("Armature")
         if not armature:
             return {'CANCELLED'}
 
-        # Get the bones
-        lower_mouth_area = armature.pose.bones.get("CAS_LowerMouthArea")
-        upper_mouth_area = armature.pose.bones.get("CAS_UpperMouthArea")
-        Right_Mouth = armature.pose.bones.get("R_Mouth")
-        Left_Mouth = armature.pose.bones.get("L_Mouth")
-        lolip = armature.pose.bones.get("LoLip")
-        jaw = armature.pose.bones.get("Jaw")
+        selected_jaw_bonee = armature.pose.bones.get(sims_vismea_props.selected_jaw_bone)
+        selected_lmouth_bonee = armature.pose.bones.get(sims_vismea_props.selected_lmouth_bone)
+        selected_rmouth_bonee = armature.pose.bones.get(sims_vismea_props.selected_rmouth_bone)
 
-        # Rotate the bones
-        lower_mouth_area.rotation_euler.x += 0.0892665
-        upper_mouth_area.rotation_euler.x -= 0.0892665
-        #Right_Mouth.location.z -= -0.0032921
-        Right_Mouth.location.x -= -0.0132921
-        #Right_Mouth.location.y -= -0.010747
-        #Left_Mouth.location.y -= 0.010747
-        #Left_Mouth.location.z -= -0.0032921
-        Left_Mouth.location.x -= 0.0132921
-        lolip.location.z -= -0.0142921
-        if jaw:
-            jaw.rotation_quaternion.rotate(Quaternion((1, 0, 0), 0.142173))
+        if not selected_jaw_bonee or not selected_lmouth_bonee or not selected_rmouth_bonee:
+            self.report({'ERROR'}, "Selected bones not found")
+            return {'CANCELLED'}
+
+        rotate_bone(selected_jaw_bonee, (1, 0, 0), sims_vismea_props.jaw_rotation_CH)
+        move_bone(selected_lmouth_bonee, 'x', sims_vismea_props.lmouth_location_x_CH)
+        move_bone(selected_rmouth_bonee, 'x', sims_vismea_props.rmouth_location_x_CH)
 
         return {'FINISHED'}
+
 
 class PoseClearOperatorold(bpy.types.Operator):
     """Rsets the Charachter Pose to the defufalt"""
