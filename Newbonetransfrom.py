@@ -45,6 +45,14 @@ class SimsVismeaSoundsPanelnew(bpy.types.Panel):
         row.label(text="Eyes")
 
         row = layout.row()
+        row.prop_search(sims_vismea_props, "SL_UpLid", bpy.data.objects[context.object.name].pose, "bones", text="")
+        row.prop_search(sims_vismea_props, "SR_LoLid", bpy.data.objects[context.object.name].pose, "bones", text="")
+
+        row = layout.row()
+        row.prop_search(sims_vismea_props, "SL_UpLid", bpy.data.objects[context.object.name].pose, "bones", text="")
+        row.prop_search(sims_vismea_props, "SR_LoLid", bpy.data.objects[context.object.name].pose, "bones", text="")
+
+        row = layout.row()
         row.operator("object.rotate_l_uplid")
         row.operator("object.rotate_l_lolid")
 
@@ -69,32 +77,72 @@ class SVSsPNAA(bpy.types.Panel):
         scene = context.scene
         sims_vismea_props = context.scene.sims_vismea_props
 
-        if is_object_mode(context):
-            layout = self.layout
-            layout.label(text="You need to be in pose mode", icon='ERROR')
+
+        row = layout.row()
+        row.label(text="Jaw Rotation:")
+        row.prop(sims_vismea_props, "jaw_rotation_AA", slider=True)
+
+        row = layout.row()
+        row.label(text="Lmouth X Location:")
+        row.prop(sims_vismea_props, "lmouth_location_x_AA", slider=True)
+
+        row = layout.row()
+        row.label(text="Rmouth X Location:")
+        row.prop(sims_vismea_props, "rmouth_location_x_AA", slider=True)
+
+        if is_pose_mode(context):
+            layout.label(text="Pose mode")
+        elif is_edit_mode(context):
+            layout.label(text="Edit mode")
         else:
-            row = layout.row()
-            row.label(text="Jaw Rotation:")
-            row.prop(sims_vismea_props, "jaw_rotation_AA", slider=True)
+            layout.label(text="Other mode")
 
-            row = layout.row()
-            row.label(text="Lmouth X Location:")
-            row.prop(sims_vismea_props, "lmouth_location_x_AA", slider=True)
+class SVSsPNEYES(bpy.types.Panel):
+    bl_label = "Eye Values"
+    bl_idname = "OBJECT_PT_bone_transformNeEYEs"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'SimsVRC'
+    bl_order = 1
+    #@classmethod
+    #def poll(cls, context):
+    #    preferences = bpy.context.preferences.addons['BlenderVRchatVismeaCreater'].preferences
+    #    return preferences.Boners_enum1 == "OPTION1"
+    def draw(self, context):
+        layout = self.layout
+        scene = context.scene
+        sims_vismea_props = context.scene.sims_vismea_props
 
-            row = layout.row()
-            row.label(text="Rmouth X Location:")
-            row.prop(sims_vismea_props, "rmouth_location_x_AA", slider=True)
+        #if is_object_mode(context):
+        #    layout = self.layout
+        #    layout.label(text="You need to be in pose mode", icon='ERROR')
+        #else:
+        row = layout.row()
+        row.label(text="Left up")
+        row.prop(sims_vismea_props, "L_UpLidrotate", slider=True)
 
-            if is_pose_mode(context):
-                layout.label(text="Pose mode")
-            elif is_edit_mode(context):
-                layout.label(text="Edit mode")
-            else:
-                layout.label(text="Other mode")
+        row = layout.row()
+        row.label(text="Left down")
+        row.prop(sims_vismea_props, "L_LoLidrotate", slider=True)
+
+        row = layout.row()
+        row.label(text="right up")
+        row.prop(sims_vismea_props, "R_UpLidrotate", slider=True)
+
+        row = layout.row()
+        row.label(text="right down")
+        row.prop(sims_vismea_props, "R_LoLidrotate", slider=True)
+
+        if is_pose_mode(context):
+            layout.label(text="Pose mode")
+        elif is_edit_mode(context):
+            layout.label(text="Edit mode")
+        else:
+            layout.label(text="Other mode")
 
 
 class SVSsPNOH(bpy.types.Panel):
-    bl_label = "AA sound values"
+    bl_label = "OH sound values"
     bl_idname = "OBJECT_PT_bone_transformNewOH"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -109,31 +157,27 @@ class SVSsPNOH(bpy.types.Panel):
         scene = context.scene
         sims_vismea_props = context.scene.sims_vismea_props
 
-        if is_object_mode(context):
-            layout = self.layout
-            layout.label(text="You need to be in pose mode", icon='ERROR')
+        row = layout.row()
+        row.label(text="Jaw Rotation:")
+        row.prop(sims_vismea_props, "jaw_rotation_OH", slider=True)
+
+        row = layout.row()
+        row.label(text="Lmouth X Location:")
+        row.prop(sims_vismea_props, "lmouth_location_x_OH", slider=True)
+
+        row = layout.row()
+        row.label(text="Rmouth X Location:")
+        row.prop(sims_vismea_props, "rmouth_location_x_OH", slider=True)
+
+        if is_pose_mode(context):
+            layout.label(text="Pose mode")
+        elif is_edit_mode(context):
+            layout.label(text="Edit mode")
         else:
-            row = layout.row()
-            row.label(text="Jaw Rotation:")
-            row.prop(sims_vismea_props, "jaw_rotation_OH", slider=True)
-
-            row = layout.row()
-            row.label(text="Lmouth X Location:")
-            row.prop(sims_vismea_props, "lmouth_location_x_OH", slider=True)
-
-            row = layout.row()
-            row.label(text="Rmouth X Location:")
-            row.prop(sims_vismea_props, "rmouth_location_x_OH", slider=True)
-
-            if is_pose_mode(context):
-                layout.label(text="Pose mode")
-            elif is_edit_mode(context):
-                layout.label(text="Edit mode")
-            else:
-                layout.label(text="Other mode")
+            layout.label(text="Other mode")
 
 class SVSsPNCH(bpy.types.Panel):
-    bl_label = "AA sound values"
+    bl_label = "CH sound values"
     bl_idname = "OBJECT_PT_bone_transformNewCH"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -148,28 +192,24 @@ class SVSsPNCH(bpy.types.Panel):
         scene = context.scene
         sims_vismea_props = context.scene.sims_vismea_props
 
-        if is_object_mode(context):
-            layout = self.layout
-            layout.label(text="You need to be in pose mode", icon='ERROR')
+        row = layout.row()
+        row.label(text="Jaw Rotation:")
+        row.prop(sims_vismea_props, "jaw_rotation_CH", slider=True)
+
+        row = layout.row()
+        row.label(text="Lmouth X Location:")
+        row.prop(sims_vismea_props, "lmouth_location_x_CH", slider=True)
+
+        row = layout.row()
+        row.label(text="Rmouth X Location:")
+        row.prop(sims_vismea_props, "rmouth_location_x_CH", slider=True)
+
+        if is_pose_mode(context):
+            layout.label(text="Pose mode")
+        elif is_edit_mode(context):
+            layout.label(text="Edit mode")
         else:
-            row = layout.row()
-            row.label(text="Jaw Rotation:")
-            row.prop(sims_vismea_props, "jaw_rotation_CH", slider=True)
-
-            row = layout.row()
-            row.label(text="Lmouth X Location:")
-            row.prop(sims_vismea_props, "lmouth_location_x_CH", slider=True)
-
-            row = layout.row()
-            row.label(text="Rmouth X Location:")
-            row.prop(sims_vismea_props, "rmouth_location_x_CH", slider=True)
-
-            if is_pose_mode(context):
-                layout.label(text="Pose mode")
-            elif is_edit_mode(context):
-                layout.label(text="Edit mode")
-            else:
-                layout.label(text="Other mode")
+            layout.label(text="Other mode")
 
 
 def is_pose_mode(context):
@@ -322,15 +362,15 @@ class SimsVismeaPropertyGroup(bpy.types.PropertyGroup):
         name="Right Mouth X Location",
         description="X location of the right mouth bone",
         default=0.015
-    )
+    )#Left eye
     SL_UpLid: bpy.props.StringProperty(
         name="Selected Jaw Bone",
-        description="Name of the selected jaw bone",
+        description="The upper lid",
         default="L_UpLid"
     )
     SL_LoLid: bpy.props.StringProperty(
         name="Selected Jaw Bone",
-        description="Name of the selected jaw bone",
+        description="The lower lid",
         default="L_LoLid"
     )
     L_UpLidrotate: bpy.props.FloatProperty(
@@ -342,7 +382,7 @@ class SimsVismeaPropertyGroup(bpy.types.PropertyGroup):
         name="Right Mouth X Location",
         description="X location of the right mouth bone",
         default=0.349066
-    )#now right
+    )#Right eye
     SR_UpLid: bpy.props.StringProperty(
         name="Selected Jaw Bone",
         description="Name of the selected jaw bone",
@@ -416,7 +456,6 @@ class BoneTransformCHOperatorold(bpy.types.Operator):
 
         return {'FINISHED'}
 
-
 class PoseClearOperatorold(bpy.types.Operator):
     """Rsets the Charachter Pose to the defufalt"""
     bl_idname = "pose.clear_operator"
@@ -459,20 +498,6 @@ class RotateLUpLidOperatorold(bpy.types.Operator):
         rotate_bone(L_LoLide, (1, 0, 0), sims_vismea_props.L_LoLidrotate)
         return {'FINISHED'}
 
-    #def execute(self, context):
-    #    armature = bpy.data.objects.get("Armature")
-    #    if not armature:
-    #        return {'CANCELLED'}
-    #    # Get the bones
-    #    l_uplid = armature.pose.bones.get("L_UpLid")
-    #    l_lolid = armature.pose.bones.get("L_LoLid")
-    #    # Rotate the bones 0.349066 349066
-    #    if l_uplid:
-    #        l_uplid.rotation_quaternion.rotate(Quaternion((1, 0, 0), -0.349066))
-    #    if l_lolid:
-    #        l_lolid.rotation_quaternion.rotate(Quaternion((1, 0, 0), 0.349066))
-    #    return {'FINISHED'}
-
 class RotateLLoLidOperatorold(bpy.types.Operator):
     bl_idname = "object.rotate_l_lolid"
     bl_label = "Close Right"
@@ -481,17 +506,20 @@ class RotateLLoLidOperatorold(bpy.types.Operator):
     def poll(cls, context):
         return is_pose_mode(context)
     def execute(self, context):
+        sims_vismea_props = context.scene.sims_vismea_props
         armature = bpy.data.objects.get("Armature")
         if not armature:
             return {'CANCELLED'}
-        # Get the bones
-        R_uplid = armature.pose.bones.get("R_UpLid")
-        R_lolid = armature.pose.bones.get("R_LoLid")
-        # Rotate the bones 0.349066 349066
-        if R_uplid:
-            R_uplid.rotation_quaternion.rotate(Quaternion((1, 0, 0), -0.349066))
-        if R_lolid:
-            R_lolid.rotation_quaternion.rotate(Quaternion((1, 0, 0), 0.349066))
+
+        R_UpLide = armature.pose.bones.get(sims_vismea_props.SR_UpLid)
+        R_LoLide = armature.pose.bones.get(sims_vismea_props.SR_LoLid)
+
+        if not R_UpLide or not R_LoLide:
+            self.report({'ERROR'}, "Selected bones not found")
+            return {'CANCELLED'}
+
+        rotate_bone(R_UpLide, (1, 0, 0), sims_vismea_props.R_UpLidrotate)
+        rotate_bone(R_LoLide, (1, 0, 0), sims_vismea_props.R_LoLidrotate)
         return {'FINISHED'}
 
 class RotateBothEOperatorold(bpy.types.Operator):
@@ -502,24 +530,24 @@ class RotateBothEOperatorold(bpy.types.Operator):
     def poll(cls, context):
         return is_pose_mode(context)
     def execute(self, context):
+        sims_vismea_props = context.scene.sims_vismea_props
         armature = bpy.data.objects.get("Armature")
         if not armature:
             return {'CANCELLED'}
-        # Get the bones
-        R_uplid = armature.pose.bones.get("R_UpLid")
-        R_lolid = armature.pose.bones.get("R_LoLid")
-        l_uplid = armature.pose.bones.get("L_UpLid")
-        l_lolid = armature.pose.bones.get("L_LoLid")
-        # Rotate the bones 0.349066 349066
-        if R_uplid:
-            R_uplid.rotation_quaternion.rotate(Quaternion((1, 0, 0), -0.349066))
-        if R_lolid:
-            R_lolid.rotation_quaternion.rotate(Quaternion((1, 0, 0), 0.349066))
-        if l_uplid:
-            l_uplid.rotation_quaternion.rotate(Quaternion((1, 0, 0), -0.349066))
-        if l_lolid:
-            l_lolid.rotation_quaternion.rotate(Quaternion((1, 0, 0), 0.349066))
-        self.report({'INFO'}, "Both Eyes are now closed")
+
+        R_UpLide = armature.pose.bones.get(sims_vismea_props.SR_UpLid)
+        R_LoLide = armature.pose.bones.get(sims_vismea_props.SR_LoLid)
+        L_UpLide = armature.pose.bones.get(sims_vismea_props.SL_UpLid)
+        L_LoLide = armature.pose.bones.get(sims_vismea_props.SL_LoLid)
+
+        if not R_UpLide or not R_LoLide or not L_UpLide or not L_LoLide:
+            self.report({'ERROR'}, "Selected bones not found")
+            return {'CANCELLED'}
+
+        rotate_bone(R_UpLide, (1, 0, 0), sims_vismea_props.R_UpLidrotate)
+        rotate_bone(R_LoLide, (1, 0, 0), sims_vismea_props.R_LoLidrotate)
+        rotate_bone(L_UpLide, (1, 0, 0), sims_vismea_props.L_UpLidrotate)
+        rotate_bone(L_LoLide, (1, 0, 0), sims_vismea_props.L_LoLidrotate)
         return {'FINISHED'}
 
 def menu_funcold(self, context):
@@ -530,6 +558,7 @@ classes = (
     SVSsPNAA,
     SVSsPNOH,
     SVSsPNCH,
+    SVSsPNEYES,
     Objectmodeinold,
     ObjectmodeinoldSecoundold,
     Editmodeinold,
@@ -552,6 +581,8 @@ def register():
     bpy.types.Scene.selected_jaw_bonee = bpy.props.StringProperty()
     bpy.types.Scene.L_UpLide = bpy.props.StringProperty()
     bpy.types.Scene.L_LoLide = bpy.props.StringProperty()
+    bpy.types.Scene.R_UpLide = bpy.props.StringProperty()
+    bpy.types.Scene.R_LoLide = bpy.props.StringProperty()
 
 
 def unregister():
@@ -563,6 +594,8 @@ def unregister():
     del bpy.types.Scene.selected_jaw_bonee
     del bpy.types.Scene.L_UpLide
     del bpy.types.Scene.L_LoLide
+    del bpy.types.Scene.R_UpLide
+    del bpy.types.Scene.R_LoLide
 
 if __name__ == "__main__":
     register()
