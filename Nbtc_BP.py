@@ -323,48 +323,6 @@ class SimsVismeaPropertyGroup(bpy.types.PropertyGroup):
         description="X location of the right mouth bone",
         default=0.015
     )
-    SL_UpLid: bpy.props.StringProperty(
-        name="Selected Jaw Bone",
-        description="Name of the selected jaw bone",
-        default="L_UpLid"
-    )
-    SL_LoLid: bpy.props.StringProperty(
-        name="Selected Jaw Bone",
-        description="Name of the selected jaw bone",
-        default="L_LoLid"
-    )
-    L_UpLidrotate: bpy.props.FloatProperty(
-        name="Left Mouth X Location",
-        description="X location of the left mouth bone",
-        default=-0.349066
-    )
-    L_LoLidrotate: bpy.props.FloatProperty(
-        name="Right Mouth X Location",
-        description="X location of the right mouth bone",
-        default=0.349066
-    )#now right
-    SR_UpLid: bpy.props.StringProperty(
-        name="Selected Jaw Bone",
-        description="Name of the selected jaw bone",
-        default="R_UpLid"
-    )
-    SR_LoLid: bpy.props.StringProperty(
-        name="Selected Jaw Bone",
-        description="Name of the selected jaw bone",
-        default="R_LoLid"
-    )
-    R_UpLidrotate: bpy.props.FloatProperty(
-        name="Left Mouth X Location",
-        description="X location of the left mouth bone",
-        default=-0.349066
-    )
-    R_LoLidrotate: bpy.props.FloatProperty(
-        name="Right Mouth X Location",
-        description="X location of the right mouth bone",
-        default=0.349066
-    )
-#L_UpLid -0.349066
-#L_LoLid 0.349066
 
 class BoneTransformOHOperatorold(bpy.types.Operator):
     """Moves the characher mouth to momick the sound of OH"""
@@ -433,8 +391,7 @@ class PoseClearOperatorold(bpy.types.Operator):
         bpy.ops.pose.select_all(action='DESELECT')
         self.report({'INFO'}, "Pose Cleared")
         return {'FINISHED'}
-#L_UpLid -0.349066
-#L_LoLid 0.349066
+
 class RotateLUpLidOperatorold(bpy.types.Operator):
     bl_idname = "object.rotate_l_uplid"
     bl_label = "Close Left"
@@ -443,35 +400,18 @@ class RotateLUpLidOperatorold(bpy.types.Operator):
     def poll(cls, context):
         return is_pose_mode(context)
     def execute(self, context):
-        sims_vismea_props = context.scene.sims_vismea_props
         armature = bpy.data.objects.get("Armature")
         if not armature:
             return {'CANCELLED'}
-
-        L_UpLide = armature.pose.bones.get(sims_vismea_props.SL_UpLid)
-        L_LoLide = armature.pose.bones.get(sims_vismea_props.SL_LoLid)
-
-        if not L_UpLide or not L_LoLide:
-            self.report({'ERROR'}, "Selected bones not found")
-            return {'CANCELLED'}
-
-        rotate_bone(L_UpLide, (1, 0, 0), sims_vismea_props.L_UpLidrotate)
-        rotate_bone(L_LoLide, (1, 0, 0), sims_vismea_props.L_LoLidrotate)
+        # Get the bones
+        l_uplid = armature.pose.bones.get("L_UpLid")
+        l_lolid = armature.pose.bones.get("L_LoLid")
+        # Rotate the bones 0.349066 349066
+        if l_uplid:
+            l_uplid.rotation_quaternion.rotate(Quaternion((1, 0, 0), -0.349066))
+        if l_lolid:
+            l_lolid.rotation_quaternion.rotate(Quaternion((1, 0, 0), 0.349066))
         return {'FINISHED'}
-
-    #def execute(self, context):
-    #    armature = bpy.data.objects.get("Armature")
-    #    if not armature:
-    #        return {'CANCELLED'}
-    #    # Get the bones
-    #    l_uplid = armature.pose.bones.get("L_UpLid")
-    #    l_lolid = armature.pose.bones.get("L_LoLid")
-    #    # Rotate the bones 0.349066 349066
-    #    if l_uplid:
-    #        l_uplid.rotation_quaternion.rotate(Quaternion((1, 0, 0), -0.349066))
-    #    if l_lolid:
-    #        l_lolid.rotation_quaternion.rotate(Quaternion((1, 0, 0), 0.349066))
-    #    return {'FINISHED'}
 
 class RotateLLoLidOperatorold(bpy.types.Operator):
     bl_idname = "object.rotate_l_lolid"
@@ -550,8 +490,6 @@ def register():
     bpy.utils.register_class(SimsVismeaPropertyGroup)
     bpy.types.Scene.sims_vismea_props = bpy.props.PointerProperty(type=SimsVismeaPropertyGroup)
     bpy.types.Scene.selected_jaw_bonee = bpy.props.StringProperty()
-    bpy.types.Scene.L_UpLide = bpy.props.StringProperty()
-    bpy.types.Scene.L_LoLide = bpy.props.StringProperty()
 
 
 def unregister():
@@ -561,8 +499,6 @@ def unregister():
     bpy.utils.register_class(SimsVismeaPropertyGroup)
     bpy.types.Scene.sims_vismea_props = bpy.props.PointerProperty(type=SimsVismeaPropertyGroup)
     del bpy.types.Scene.selected_jaw_bonee
-    del bpy.types.Scene.L_UpLide
-    del bpy.types.Scene.L_LoLide
 
 if __name__ == "__main__":
     register()
