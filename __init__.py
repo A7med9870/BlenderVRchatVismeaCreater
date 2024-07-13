@@ -3,7 +3,7 @@ bl_info = {
     "author" : "A7med9870",
     "description" : "Create visemes faster for VRChat, with your rigged models",
     "blender" : (3, 3, 0),
-    "version" : (0, 0, 1),
+    "version" : (0, 0, 2),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -64,7 +64,7 @@ class VRCvvv(bpy.types.AddonPreferences):
         row.prop(self, "show_shapekeylist_panel")
 
         layout.prop(self, "FBXEdropdown_enum1")
-        
+
         row = layout.row()
         row.operator("wm.url_open", text="Github Page").url = self.documentation_url
         row.operator("wm.url_open", text="Creator's Youtube").url = self.YT_url

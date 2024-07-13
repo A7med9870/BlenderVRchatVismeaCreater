@@ -22,29 +22,16 @@ class SimsVismeaSoundsPanelnew(bpy.types.Panel):
         scene = context.scene
         sims_vismea_props = context.scene.sims_vismea_props
 
-        # Get all mesh objects in the scene
-        meshes = [obj for obj in bpy.context.scene.objects if obj.type == 'MESH']
-        
-        # Create a drop-down select box for selecting the mesh
-        layout.label(text="Select the Mesh:")
-        layout.prop_search(context.scene, "selected_mesh", bpy.data, "objects", text="")
-        
-        # Add a button to add blend shape key
-        layout.operator("object.add_blend_shape_key", text="Add Blend Shape Key")
-
         layout.label(text="Select jaw bone:")
-        if context.object:
-            layout.prop_search(sims_vismea_props, "selected_jaw_bone", context.object.pose if context.object.pose else context.object, "bones", text="")
-
+        layout.prop_search(sims_vismea_props, "selected_jaw_bone", bpy.data.objects[context.object.name].pose, "bones", text="")
 
         row = layout.row()
         row.label(text="Lmouth")
         row.label(text="Rmouth")
 
         row = layout.row()
-        if context.object and context.object.pose:
-            row.prop_search(sims_vismea_props, "selected_lmouth_bone", context.object.pose, "bones", text="")
-            row.prop_search(sims_vismea_props, "selected_rmouth_bone", context.object.pose, "bones", text="")
+        row.prop_search(sims_vismea_props, "selected_lmouth_bone", bpy.data.objects[context.object.name].pose, "bones", text="")
+        row.prop_search(sims_vismea_props, "selected_rmouth_bone", bpy.data.objects[context.object.name].pose, "bones", text="")
 
         row = layout.row()
         row.operator("object.bone_transform")
@@ -58,15 +45,12 @@ class SimsVismeaSoundsPanelnew(bpy.types.Panel):
         row.label(text="Eyes")
 
         row = layout.row()
-        if context.object and context.object.pose:
-            row.prop_search(sims_vismea_props, "SL_UpLid", context.object.pose, "bones", text="")
-            row.prop_search(sims_vismea_props, "SR_LoLid", context.object.pose, "bones", text="")
+        row.prop_search(sims_vismea_props, "SL_UpLid", bpy.data.objects[context.object.name].pose, "bones", text="")
+        row.prop_search(sims_vismea_props, "SR_LoLid", bpy.data.objects[context.object.name].pose, "bones", text="")
 
         row = layout.row()
-        if context.object and context.object.pose:
-            row.prop_search(sims_vismea_props, "SL_UpLid", context.object.pose, "bones", text="")
-            row.prop_search(sims_vismea_props, "SR_LoLid", context.object.pose, "bones", text="")
-
+        row.prop_search(sims_vismea_props, "SL_UpLid", bpy.data.objects[context.object.name].pose, "bones", text="")
+        row.prop_search(sims_vismea_props, "SR_LoLid", bpy.data.objects[context.object.name].pose, "bones", text="")
 
         row = layout.row()
         row.operator("object.rotate_l_uplid")
@@ -156,6 +140,7 @@ class SVSsPNEYES(bpy.types.Panel):
         else:
             layout.label(text="Other mode")
 
+
 class SVSsPNOH(bpy.types.Panel):
     bl_label = "OH sound values"
     bl_idname = "OBJECT_PT_bone_transformNewOH"
@@ -226,6 +211,7 @@ class SVSsPNCH(bpy.types.Panel):
         else:
             layout.label(text="Other mode")
 
+
 def is_pose_mode(context):
     return context.mode == 'POSE'
 
@@ -235,7 +221,7 @@ def is_object_mode(context):
 def is_edit_mode(context):
     return context.mode == 'EDIT'
 
-class Objectmodeinnew(bpy.types.Operator):
+class Objectmodeinold(bpy.types.Operator):
     """Enter Object Mode"""
     bl_idname = "object.apply_objectmode"
     bl_label = "Object Mode"
@@ -245,7 +231,7 @@ class Objectmodeinnew(bpy.types.Operator):
         bpy.ops.object.editmode_toggle()
         return {'FINISHED'}
 
-class ObjectmodeinnewSecoundnew(bpy.types.Operator):
+class ObjectmodeinoldSecoundold(bpy.types.Operator):
     """Enter Object Mode"""
     bl_idname = "object.apply_objectmodesec"
     bl_label = "Object Mode"
@@ -254,7 +240,7 @@ class ObjectmodeinnewSecoundnew(bpy.types.Operator):
         bpy.ops.object.editmode_toggle()
         return {'FINISHED'}
 
-class Editmodeinnew(bpy.types.Operator):
+class Editmodeinold(bpy.types.Operator):
     """Enter Editing Mode"""
     bl_idname = "object.apply_editmode"
     bl_label = "Edit Mode"
@@ -307,26 +293,7 @@ class BoneTransformAAOperatorold(bpy.types.Operator):
         move_bone(selected_lmouth_bonee, 'x', sims_vismea_props.lmouth_location_x_AA)
         move_bone(selected_rmouth_bonee, 'x', sims_vismea_props.rmouth_location_x_AA)
 
-        # Get the selected mesh object from the dropdown box
-        selected_object_name = context.scene.selected_mesh
-        selected_object = bpy.data.objects.get(selected_object_name)
-
-        # Check if the selected object is a mesh
-        if selected_object is None or selected_object.type != 'MESH':
-            self.report({'ERROR'}, "Select a mesh object")
-            return {'CANCELLED'}
-
-        # Apply the Armature modifier as a shape key
-        bpy.context.view_layer.objects.active = selected_object
-        bpy.ops.object.modifier_apply_as_shapekey(keep_modifier=True, modifier="Armature")
-
-        # Rename the last created shape key to "AA_Shapekey"
-        new_key = selected_object.data.shape_keys.key_blocks[-1]
-        new_key.name = "AA_Shapekey"
-
-        self.report({'INFO'}, "Applied Armature modifier as a shape key and renamed it to AA_Shapekey")
         return {'FINISHED'}
-
 
 
 class SimsVismeaPropertyGroup(bpy.types.PropertyGroup):
@@ -439,7 +406,7 @@ class SimsVismeaPropertyGroup(bpy.types.PropertyGroup):
 #L_UpLid -0.349066
 #L_LoLid 0.349066
 
-class BoneTransformOHOperatornew(bpy.types.Operator):
+class BoneTransformOHOperatorold(bpy.types.Operator):
     """Moves the characher mouth to momick the sound of OH"""
     bl_idname = "object.bone_transform2"
     bl_label = "OH"
@@ -462,28 +429,9 @@ class BoneTransformOHOperatornew(bpy.types.Operator):
         move_bone(selected_lmouth_bonee, 'x', sims_vismea_props.lmouth_location_x_OH)
         move_bone(selected_rmouth_bonee, 'x', sims_vismea_props.rmouth_location_x_OH)
 
-        # Get the selected mesh object from the dropdown box
-        selected_object_name = context.scene.selected_mesh
-        selected_object = bpy.data.objects.get(selected_object_name)
-
-        # Check if the selected object is a mesh
-        if selected_object is None or selected_object.type != 'MESH':
-            self.report({'ERROR'}, "Select a mesh object")
-            return {'CANCELLED'}
-
-        # Apply the Armature modifier as a shape key
-        bpy.context.view_layer.objects.active = selected_object
-        bpy.ops.object.modifier_apply_as_shapekey(keep_modifier=True, modifier="Armature")
-
-        # Rename the last created shape key to "AA_Shapekey"
-        new_key = selected_object.data.shape_keys.key_blocks[-1]
-        new_key.name = "OH_Shapekey"
-
-        self.report({'INFO'}, "Applied Armature modifier as a shape key")
-
         return {'FINISHED'}
 
-class BoneTransformCHOperatornew(bpy.types.Operator):
+class BoneTransformCHOperatorold(bpy.types.Operator):
     """Moves the characher mouth to momick the sound of CH"""
     bl_idname = "object.bone_transform3"
     bl_label = "Ch"
@@ -506,28 +454,9 @@ class BoneTransformCHOperatornew(bpy.types.Operator):
         move_bone(selected_lmouth_bonee, 'x', sims_vismea_props.lmouth_location_x_CH)
         move_bone(selected_rmouth_bonee, 'x', sims_vismea_props.rmouth_location_x_CH)
 
-        # Get the selected mesh object from the dropdown box
-        selected_object_name = context.scene.selected_mesh
-        selected_object = bpy.data.objects.get(selected_object_name)
-
-        # Check if the selected object is a mesh
-        if selected_object is None or selected_object.type != 'MESH':
-            self.report({'ERROR'}, "Select a mesh object")
-            return {'CANCELLED'}
-
-        # Apply the Armature modifier as a shape key
-        bpy.context.view_layer.objects.active = selected_object
-        bpy.ops.object.modifier_apply_as_shapekey(keep_modifier=True, modifier="Armature")
-
-        # Rename the last created shape key to "AA_Shapekey"
-        new_key = selected_object.data.shape_keys.key_blocks[-1]
-        new_key.name = "CH_Shapekey"
-
-        self.report({'INFO'}, "Applied Armature modifier as a shape key")
-
         return {'FINISHED'}
 
-class PoseClearOperatornew(bpy.types.Operator):
+class PoseClearOperatorold(bpy.types.Operator):
     """Rsets the Charachter Pose to the defufalt"""
     bl_idname = "pose.clear_operator"
     bl_label = "Clear Pose"
@@ -545,10 +474,13 @@ class PoseClearOperatornew(bpy.types.Operator):
         return {'FINISHED'}
 #L_UpLid -0.349066
 #L_LoLid 0.349066
-class RotateLUpLidOperatornew(bpy.types.Operator):
+class RotateLUpLidOperatorold(bpy.types.Operator):
     bl_idname = "object.rotate_l_uplid"
     bl_label = "Close Left"
     bl_options = {'REGISTER', 'UNDO'}
+    @classmethod
+    def poll(cls, context):
+        return is_pose_mode(context)
     def execute(self, context):
         sims_vismea_props = context.scene.sims_vismea_props
         armature = bpy.data.objects.get("Armature")
@@ -564,32 +496,15 @@ class RotateLUpLidOperatornew(bpy.types.Operator):
 
         rotate_bone(L_UpLide, (1, 0, 0), sims_vismea_props.L_UpLidrotate)
         rotate_bone(L_LoLide, (1, 0, 0), sims_vismea_props.L_LoLidrotate)
-
-        # Get the selected mesh object from the dropdown box
-        selected_object_name = context.scene.selected_mesh
-        selected_object = bpy.data.objects.get(selected_object_name)
-
-        # Check if the selected object is a mesh
-        if selected_object is None or selected_object.type != 'MESH':
-            self.report({'ERROR'}, "Select a mesh object")
-            return {'CANCELLED'}
-
-        # Apply the Armature modifier as a shape key
-        bpy.context.view_layer.objects.active = selected_object
-        bpy.ops.object.modifier_apply_as_shapekey(keep_modifier=True, modifier="Armature")
-
-        # Rename the last created shape key to "AA_Shapekey"
-        new_key = selected_object.data.shape_keys.key_blocks[-1]
-        new_key.name = "EYE_L_CLOSED"
-
-        self.report({'INFO'}, "Applied Armature modifier as a shape key")
-
         return {'FINISHED'}
 
-class RotateLLoLidOperatornew(bpy.types.Operator):
+class RotateLLoLidOperatorold(bpy.types.Operator):
     bl_idname = "object.rotate_l_lolid"
     bl_label = "Close Right"
     bl_options = {'REGISTER', 'UNDO'}
+    @classmethod
+    def poll(cls, context):
+        return is_pose_mode(context)
     def execute(self, context):
         sims_vismea_props = context.scene.sims_vismea_props
         armature = bpy.data.objects.get("Armature")
@@ -605,31 +520,15 @@ class RotateLLoLidOperatornew(bpy.types.Operator):
 
         rotate_bone(R_UpLide, (1, 0, 0), sims_vismea_props.R_UpLidrotate)
         rotate_bone(R_LoLide, (1, 0, 0), sims_vismea_props.R_LoLidrotate)
-        # Get the selected mesh object from the dropdown box
-        selected_object_name = context.scene.selected_mesh
-        selected_object = bpy.data.objects.get(selected_object_name)
-
-        # Check if the selected object is a mesh
-        if selected_object is None or selected_object.type != 'MESH':
-            self.report({'ERROR'}, "Select a mesh object")
-            return {'CANCELLED'}
-
-        # Apply the Armature modifier as a shape key
-        bpy.context.view_layer.objects.active = selected_object
-        bpy.ops.object.modifier_apply_as_shapekey(keep_modifier=True, modifier="Armature")
-
-        # Rename the last created shape key to "AA_Shapekey"
-        new_key = selected_object.data.shape_keys.key_blocks[-1]
-        new_key.name = "EYE_R_CLOSED"
-
-        self.report({'INFO'}, "Applied Armature modifier as a shape key")
-
         return {'FINISHED'}
 
-class RotateBothEOperatornew(bpy.types.Operator):
+class RotateBothEOperatorold(bpy.types.Operator):
     bl_idname = "object.rotatebotheye"
     bl_label = "Close Both Eyes"
     bl_options = {'REGISTER', 'UNDO'}
+    @classmethod
+    def poll(cls, context):
+        return is_pose_mode(context)
     def execute(self, context):
         sims_vismea_props = context.scene.sims_vismea_props
         armature = bpy.data.objects.get("Armature")
@@ -649,26 +548,6 @@ class RotateBothEOperatornew(bpy.types.Operator):
         rotate_bone(R_LoLide, (1, 0, 0), sims_vismea_props.R_LoLidrotate)
         rotate_bone(L_UpLide, (1, 0, 0), sims_vismea_props.L_UpLidrotate)
         rotate_bone(L_LoLide, (1, 0, 0), sims_vismea_props.L_LoLidrotate)
-
-        # Get the selected mesh object from the dropdown box
-        selected_object_name = context.scene.selected_mesh
-        selected_object = bpy.data.objects.get(selected_object_name)
-
-        # Check if the selected object is a mesh
-        if selected_object is None or selected_object.type != 'MESH':
-            self.report({'ERROR'}, "Select a mesh object")
-            return {'CANCELLED'}
-
-        # Apply the Armature modifier as a shape key
-        bpy.context.view_layer.objects.active = selected_object
-        bpy.ops.object.modifier_apply_as_shapekey(keep_modifier=True, modifier="Armature")
-
-        # Rename the last created shape key to "AA_Shapekey"
-        new_key = selected_object.data.shape_keys.key_blocks[-1]
-        new_key.name = "EYE_R_BOTH"
-
-        self.report({'INFO'}, "Applied Armature modifier as a shape key")
-
         return {'FINISHED'}
 
 def menu_funcold(self, context):
@@ -680,17 +559,17 @@ classes = (
     SVSsPNOH,
     SVSsPNCH,
     SVSsPNEYES,
-    Objectmodeinnew,
-    ObjectmodeinnewSecoundnew,
-    Editmodeinnew,
+    Objectmodeinold,
+    ObjectmodeinoldSecoundold,
+    Editmodeinold,
     Posemodeinold,
     BoneTransformAAOperatorold,
-    BoneTransformOHOperatornew,
-    BoneTransformCHOperatornew,
-    PoseClearOperatornew,
-    RotateLUpLidOperatornew,
-    RotateLLoLidOperatornew,
-    RotateBothEOperatornew,
+    BoneTransformOHOperatorold,
+    BoneTransformCHOperatorold,
+    PoseClearOperatorold,
+    RotateLUpLidOperatorold,
+    RotateLLoLidOperatorold,
+    RotateBothEOperatorold,
 )
 
 def register():
@@ -698,7 +577,6 @@ def register():
         bpy.utils.register_class(cls)
     bpy.types.VIEW3D_MT_object.append(menu_funcold)
     bpy.utils.register_class(SimsVismeaPropertyGroup)
-    bpy.types.Scene.selected_mesh = bpy.props.StringProperty()
     bpy.types.Scene.sims_vismea_props = bpy.props.PointerProperty(type=SimsVismeaPropertyGroup)
     bpy.types.Scene.selected_jaw_bonee = bpy.props.StringProperty()
     bpy.types.Scene.L_UpLide = bpy.props.StringProperty()
@@ -712,7 +590,6 @@ def unregister():
         bpy.utils.unregister_class(cls)
     bpy.types.VIEW3D_MT_object.remove(menu_funcold)
     bpy.utils.register_class(SimsVismeaPropertyGroup)
-    del bpy.types.Scene.selected_mesh
     bpy.types.Scene.sims_vismea_props = bpy.props.PointerProperty(type=SimsVismeaPropertyGroup)
     del bpy.types.Scene.selected_jaw_bonee
     del bpy.types.Scene.L_UpLide
