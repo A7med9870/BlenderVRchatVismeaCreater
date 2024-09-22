@@ -3,7 +3,7 @@ bl_info = {
     "author" : "A7med9870",
     "description" : "Create visemes faster for VRChat, with your rigged models",
     "blender" : (3, 3, 0),
-    "version" : (0, 0, 2,2),
+    "version" : (0, 0, 2,3),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
