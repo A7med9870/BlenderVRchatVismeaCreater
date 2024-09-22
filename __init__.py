@@ -3,7 +3,7 @@ bl_info = {
     "author" : "A7med9870",
     "description" : "Create visemes faster for VRChat, with your rigged models",
     "blender" : (3, 3, 0),
-    "version" : (0, 0, 2,1),
+    "version" : (0, 0, 2,2),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -14,11 +14,11 @@ from mathutils import Quaternion
 from bpy.types import Panel, AddonPreferences
 from bpy.props import BoolProperty, EnumProperty
 try:
-    # from . import listtheviesma
-    from . import applypart
-    from . import Oldbonetransfrom
-    from . import Newbonetransfrom
-    from . import Changemodespanmel
+    # from . import listtheviesma           #very buggy
+    from . import applypart                 #Needs user feedback
+    from . import Oldbonetransfrom          #reaiable, but needs the jaw rotation and varitation atm
+    from . import Changemodespanmel         #instead of using keybinds, it's for the new user who are normally in a gui place'
+    # from . import Newbonetransfrom        #what made this first release to public late
 except Exception as e:
     print("Error loading file:", e)
 
@@ -34,7 +34,7 @@ class VRCvvv(bpy.types.AddonPreferences):
     documentation_url: bpy.props.StringProperty(
         name="Documentation URL",
         description="URL for the addon documentation",
-        default="https://github.com/A7med9870/Blender-Car-Streamliner",
+        default="https://github.com/A7med9870/BlenderVRchatVismeaCreater",
     )
     YT_url: bpy.props.StringProperty(
         name="YT URL",
@@ -86,16 +86,16 @@ def register():
     bpy.utils.register_class(VRCvvv)
     applypart.register()
     Oldbonetransfrom.register()
-    Newbonetransfrom.register()
     Changemodespanmel.register()
+    # Newbonetransfrom.register()
     # listtheviesma.register()
 
 def unregister():
     bpy.utils.unregister_class(VRCvvv)
     applypart.unregister()
     Oldbonetransfrom.unregister()
-    Newbonetransfrom.unregister()
     Changemodespanmel.unregister()
+    # Newbonetransfrom.unregister()
     # listtheviesma.unregister()
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ class SimsVismeaSoundsPanelold(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         row = layout.row()
-        row.label(text="TheSounds Sounds")
+        row.label(text="TheSo So Sounds")
 
         row = layout.row()
         row.operator("object.bone_transform")
