@@ -3,7 +3,7 @@ bl_info = {
     "author" : "A7med9870",
     "description" : "Create visemes faster for VRChat, with your rigged models",
     "blender" : (3, 3, 0),
-    "version" : (0, 0, 2),
+    "version" : (0, 0, 2,1),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -14,7 +14,7 @@ from mathutils import Quaternion
 from bpy.types import Panel, AddonPreferences
 from bpy.props import BoolProperty, EnumProperty
 try:
-    from . import listtheviesma
+    # from . import listtheviesma
     from . import applypart
     from . import Oldbonetransfrom
     from . import Newbonetransfrom
@@ -51,9 +51,9 @@ class VRCvvv(bpy.types.AddonPreferences):
         description="For more compactily",
         items=[
             ("OPTION1", "New Boner (dynamic bones chooser)", "Hardcoded, as in you need the bones to match the names to work"),
-            ("OPTION2", "Old Bone Movers (only for sims 4 characters)", "Description for Option 2"),
+            ("OPTION2", "Old Bone Movers (only for sims 4 characters)", "You will need to edit the files in order to get the result you want"),
         ],
-        default="OPTION1"
+        default="OPTION2"
     )
 
     def draw(self, context):
@@ -84,19 +84,19 @@ class VRCvvv(bpy.types.AddonPreferences):
 
 def register():
     bpy.utils.register_class(VRCvvv)
-    listtheviesma.register()
     applypart.register()
     Oldbonetransfrom.register()
     Newbonetransfrom.register()
     Changemodespanmel.register()
+    # listtheviesma.register()
 
 def unregister():
     bpy.utils.unregister_class(VRCvvv)
-    listtheviesma.unregister()
     applypart.unregister()
     Oldbonetransfrom.unregister()
     Newbonetransfrom.unregister()
     Changemodespanmel.unregister()
+    # listtheviesma.unregister()
 
 if __name__ == "__main__":
     register()
